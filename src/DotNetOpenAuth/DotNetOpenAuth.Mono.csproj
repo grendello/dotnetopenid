@@ -7,9 +7,9 @@
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{65A33A56-2B1E-4560-8143-45EB1F57F283}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>DotNetOpenAuth.Mono</RootNamespace>
-    <AssemblyName>DotNetOpenAuth.Mono</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DotNetOpenAuth</RootNamespace>
+    <AssemblyName>DotNetOpenAuth</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <Import Project="$(ProjectRoot)tools\DotNetOpenAuth.props" />
@@ -54,7 +54,7 @@ http://opensource.org/licenses/ms-pl.html
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;MONO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -89,12 +89,12 @@ http://opensource.org/licenses/ms-pl.html
     <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>bin\mono\Debug</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;MONO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
@@ -129,13 +129,12 @@ http://opensource.org/licenses/ms-pl.html
     <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>bin\mono\Release</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'CodeAnalysis|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>$(DefineConstants);CONTRACTS_FULL;DEBUG;TRACE</DefineConstants>
+    <DefineConstants>$(DefineConstants);CONTRACTS_FULL;DEBUG;TRACE;MONO</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRules>
     </CodeAnalysisRules>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -171,13 +170,13 @@ http://opensource.org/licenses/ms-pl.html
     <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <OutputPath>bin\CodeAnalysis</OutputPath>
+    <OutputPath>bin\mono\CodeAnalysis</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -199,7 +198,7 @@ http://opensource.org/licenses/ms-pl.html
     </Reference>
     <Reference Include="System.Web.Extensions.Design">
     </Reference>
-    <Reference Include="System.Xaml" Condition=" '$(ClrVersion)' == '4' " />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
     </Reference>
     <Reference Include="WindowsBase">
@@ -216,11 +215,6 @@ http://opensource.org/licenses/ms-pl.html
   </ItemGroup>
   <ItemGroup Condition=" '$(ClrVersion)' == '4' ">
     <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(ClrVersion)' != '4' ">
-    <!-- MVC 2 can run on CLR 2 (it doesn't require CLR 4) but since MVC 2 apps tend to use type forwarding,
-         it's a more broadly consumable idea to bind against MVC 1 for the library unless we're building on CLR 4,
-         which will definitely have MVC 2 available. -->
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\ClaimTypeSuggestions.cs" />
@@ -605,6 +599,12 @@ http://opensource.org/licenses/ms-pl.html
     <Compile Include="Xrds\XrdsDocument.cs" />
     <Compile Include="Xrds\XrdsNode.cs" />
     <Compile Include="Yadis\Yadis.cs" />
+    <Compile Include="Mono\Mono.cs" />
+    <Compile Include="Mono\Compat\XamlReader.cs" />
+    <Compile Include="Mono\Compat\ParserContext.cs" />
+    <Compile Include="Mono\Compat\XmlnsDictionary.cs" />
+    <Compile Include="Mono\Compat\XamlTypeMapper.cs" />
+    <Compile Include="Mono\Compat\NamespaceMapEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration\DotNetOpenAuth.xsd" />
@@ -737,4 +737,8 @@ http://opensource.org/licenses/ms-pl.html
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(ProjectRoot)tools\DotNetOpenAuth.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Mono\" />
+    <Folder Include="Mono\Compat\" />
+  </ItemGroup>
 </Project>

@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+#if !MONO
+// Mono does not implement System.Web.Mobile and this assembly is also obsolete in .NET 4.0
 [assembly: System.Web.UI.WebResource(DotNetOpenAuth.OpenId.RelyingParty.OpenIdMobileTextBox.EmbeddedLogoResourceName, "image/gif")]
 
 namespace DotNetOpenAuth.OpenId.RelyingParty {
@@ -772,3 +774,4 @@ namespace DotNetOpenAuth.OpenId.RelyingParty {
 		}
 	}
 }
+#endif
